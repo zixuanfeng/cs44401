@@ -30,5 +30,10 @@ aread:
 
 clean:
 	rm -f ${filename}.{ps,pdf,log,aux,out,dvi,bbl,blg}
-        
+
+prog: assignment1.c
+	gcc assignment1.c -o prog -lpthread 
+clean:
+	rm prog           
+
 
