@@ -1,0 +1,164 @@
+\documentclass[letterpaper,10pt]{article}
+
+\usepackage{graphicx}                                        
+\usepackage{amssymb}                                         
+\usepackage{amsmath}                                         
+\usepackage{amsthm}                                          
+
+\usepackage{alltt}                                           
+\usepackage{float}
+\usepackage{color}
+\usepackage{url}
+
+\usepackage[TABBOTCAP, tight]{}
+\usepackage{enumitem}
+
+\usepackage{geometry}
+\geometry{textheight=8in, textwidth=6in}
+
+%random comment
+
+\newcommand{\cred}[1]{{\color{red}#1}}
+\newcommand{\cblue}[1]{{\color{blue}#1}}
+
+\usepackage{hyperref}
+\usepackage{geometry}
+
+\begin{document}
+    \begin{titlepage}
+    \newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
+    \center 
+    \textsc{\Large CS 444}\\[0.5cm] 
+    \textsc{\Large Fall 2016}\\[0.5cm] 
+    \HRule \\[0.4cm]
+    { \huge \bfseries Assignment 1}\\[0.5cm] % Title of your document
+    \HRule \\[1.5cm]
+    \begin{minipage}{0.4\textwidth}
+        \begin{flushleft} \large
+        \emph{Author:}\\
+        Zixuan Feng, Zixun Lu
+        \end{flushleft}
+    \end{minipage}
+    \begin{minipage}{0.4\textwidth}
+        \begin{flushright} \large
+        \emph{Instructor:} \\
+        D. Kevin McGrath
+        \end{flushright}
+    \end{minipage}\\[2cm]
+    \begin{abstract}
+
+    \item In assignment 1, we have two parts, first, we need to run the Kernel, and then we need to build a new kernel and boot in the VM. And then we need to finish the concurrent program, this is going to practice the skills in thinking in parallel. The reason why we created this log is going to recored the source code and then record the commands. And generate the knowledge what we learned in this assignment. And we need to record all the process of our steps to record which part we wrong and what obstract we went through. 
+    \end{abstract}
+    \vfill 
+
+    \end{titlepage}
+    
+
+
+    %%%%%%%%%%%%%%%%Abstract Done%%%%%%%%%%%%%%%%%%%%
+
+\section{Log of Commands}
+    \begin{itemize}
+    \item cd /scratch/fall2016\\
+    change the pathway to fall2016 folder
+
+    \item mkdir cs444-016\\
+    create a new folder called "cs444-016"
+
+    \item git clone git://git.yoctoproject.org/linux-yocto-3.14\\
+    git clone files to new folder "cs444-016"
+
+    \item cd /scratch/opt\\
+    move to opt folder
+
+    \item source environment-setup-i586-poky-linux.csh\\
+    source the appropriate file
+
+    \item cd /scratch/fall2016/cs444-016/linux-yocto-3.14\\
+    move to source root
+
+    \item qemu-system-i386 -gdb tcp::???? -S -nographic -kernel bzImage-qemux86.bin -drive file=core-image-lsb-sdk-qemux86.ext3,if=virtio -enable-kvm -net none -usb -localtime --no-reboot --append "root=/dev/vda rw console=ttyS0 debug".\\
+    run the qumu 
+
+    \item open a new putty or terminal.\\
+    open a new putty to launch and run the qemu
+
+    \item \$GDB\\
+    open a new terminal and login os-class. To use GDB
+
+    \item target remote :550016\\
+    user name is root to get in 
+
+    \item c\\
+    continue to run the qemu
+
+    \item cp /scratch/fall2016/files/config-3.14.26-yocto-qemu to
+    move to new source tree
+
+    \item make -j4 all\\ 
+    run 
+
+    \item shutdown -h now
+    shut down the qeum
+
+
+    \end{itemize}
+
+    %%%%%%%%%%%%%%%%%%Command done%%%%%%%%%%%%%%%%%%%%%
+
+\section{Explanations of flags}
+    \begin{itemize}
+    \item -gdb\\  
+    wait for gdb connection
+    \item -S\\  
+    do not start CPU at startup
+    \item -nographic\\
+    QEMU uses SDL to display the VGA output.
+    \item -kernel\\   
+    use bzImage as kernel image
+    \item -enable-kvm\\
+    enable KVM full virtualization support
+    \item -net\\
+    indicate that no network devices should be configured
+    \item -drive\\  
+    define a new drive 
+    \item -usb\\  
+    enable the USB driver 
+    \item -localtime\\ 
+    reuqired for correct date in MS-DOS or Windows
+    \end{itemize}
+
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%flags done%%%%%%%%%%%%%%%%%%%%
+        
+
+\section{Answers for the Concurrency Question}
+  \begin{itemize}
+  \item In this assignment, I think the Concurrency program is going to teach us know what is concurrency and let us know how to thinking in parallel. This skill is very important for programmer.\\ 
+  \item When i first time read this program description, I just read through all the requirements and know the basic rule of and requirements of this assignment, and then I know we need to create two treads in this program.  Acccording to the description I learned we need to let the producers create item and add to a data structure and consumers could remove the itmes and pocess them. But i just relized that when we producing thread will wait when the buffer is full and consuming thread will with when the buffer is empty. Based on these requirement we just create two treads and write two functions. One of them  is going to  prouce thread is used to produce new item and put it in buffer, and we check the buffer whether is empty. When it produce a tread the other fucntion begin to work, it is consuming thread has the similar role with that one. But we still need to create a if to check whether if is empty. It will also send a signal to another thread.\\
+  \item In this assignment I just want to make sure whether I created two treads and check these two treads. Firstly I need to check the producting thread, and check the buffer, and I set up the the sleep time as 1 second,  and time of sleep of consuming thread is 40 seconds. after 32 seconds, the buffer is full and consuming thread does not start to work yet, thus producing thread should be not procude new itme. Using the similar way to test consuming thread. But the important is before use the tread we need to check the buffer whether is empty.\\
+  \item In this assignment I learned a lot about the concncery program I understand how to generate works between two treads and learned a little about the assemble language.\\
+  \end{itemize}
+
+\section{Work Log}
+    \begin{itemize}
+    \item 01/10/2016: We set up group, know each other read through the description.\\
+    \item 03/10/2016: start to learn and build the kernel and did some research kernel.\\
+    \item 04/10/2016: When I launch the kernel, I do not know I need to type c to let it continue did some research to launch and build the kernel.\\
+    \item 07/10/2016: Start to doing the concurrency program.\\
+    \item 08/10/2016: There is problem, we checked a lot find we forgot to chekc the buffer whether is empty.\\
+    \item 09/10/2016: Finish the log and source code.\\
+
+    \end{itemize}   
+    
+
+\section{version control}
+    \begin{itemize}
+    \item 02/10/2016: version 1, we build the version 1 of kernal\\
+    \item 03/10/2016: version2, we build the versiron 2 and rebuild it again\\
+    \item 04/10/2016: version3, Create a new version for 3,14,26 for kernal.\\
+    \item 07/10/2016: version 1 of Producer-Consumer Problem\\
+    \item 08/10/2016: version 2, fixed a lot bugs of producer-consumer problems\\
+    \item 09/10/2016: version 3, deguding producer-consumer problems, and test in various sleep times\\
+
+    \end{itemize} 
+\end{document}
